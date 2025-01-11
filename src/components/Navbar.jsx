@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Image from "./image";
+import Image from "./Image";
 import { Link } from "react-router-dom";
-//import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -20,9 +20,9 @@ const Navbar = () => {
           className="cursor-pointer text-4xl"
           onClick={() => setOpen((prev) => !prev)}
         >
-         
-          {open ? "X" : "☰"}
-          {/* <div className="flex flex-col gap-[5.4px]">
+          {/* Change Hamburger Icon */}
+          {/* {open ? "X" : "☰"} */}
+          <div className="flex flex-col gap-[5.4px]">
             <div
               className={`h-[3px] rounded-md w-6 bg-black origin-left transition-all ease-in-out ${
                 open && "rotate-45"
@@ -37,20 +37,16 @@ const Navbar = () => {
               className={`h-[3px] rounded-md w-6 bg-black origin-left transition-all ease-in-out ${
                 open && "-rotate-45"
               }`}
-            ></div> */}
-          {/* </div> */}
-        </div> 
+            ></div>
+          </div>
+        </div>
         {/* MOBILE LINK LIST */}
-        { <div
+        <div
           className={`w-full h-screen bg-[#e6e6ff] flex flex-col items-center justify-center gap-8 font-medium text-lg absolute top-16 transition-all ease-in-out ${
             open ? "-right-0" : "-right-[100%]"
           }`}
         >
-        <a href="/" >Home</a>
-        <a href="/" >Trending</a>
-        <a href="/" >Mostpopular</a>'
-        <a href="/" >About</a>'
-          {/* <Link to="/" onClick={()=>setOpen(false)}>Home</Link>
+          <Link to="/" onClick={()=>setOpen(false)}>Home</Link>
           <Link to="/posts?sort=trending" onClick={()=>setOpen(false)}>Trending</Link>
           <Link to="/posts?sort=popular" onClick={()=>setOpen(false)}>Most Popular</Link>
           <Link to="/" onClick={()=>setOpen(false)}>About</Link>
@@ -58,11 +54,11 @@ const Navbar = () => {
             <button className="py-2 px-4 rounded-3xl bg-blue-800 text-white">
               Login 👋
             </button>
-          </Link> */}
-        </div>}
-    </div>
+          </Link>
+        </div>
+      </div>
       {/* DESKTOP MENU */}
-     {/* <div className="hidden md:flex items-center gap-8 xl:gap-12 font-medium">
+      <div className="hidden md:flex items-center gap-8 xl:gap-12 font-medium">
         <Link to="/">Home</Link>
         <Link to="/posts?sort=trending">Trending</Link>
         <Link to="/posts?sort=popular">Most Popular</Link>
@@ -77,7 +73,9 @@ const Navbar = () => {
         <SignedIn>
           <UserButton />
         </SignedIn>
-      </div> */}
-    </div>
+      </div>
+    </div> 
   );
 };
+
+export default Navbar;
