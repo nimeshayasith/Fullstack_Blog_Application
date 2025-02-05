@@ -187,7 +187,7 @@ const SinglePostPage = () => {
           <Search />
         </div>
       </div>
-      {/* <Comments postId={data._id}/> */}
+      <Comments postId={data._id}/>
     </div>
   );
 };
