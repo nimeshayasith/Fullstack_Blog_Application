@@ -1,28 +1,28 @@
 import { Link, useParams } from "react-router-dom";
 import Image from "../components/Image";
-//import PostMenuActions from "../components/PostMenuActions";
+import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
-//import Comments from "../components/Comments";
-//import axios from "axios";
-//import { useQuery } from "@tanstack/react-query";
-//import { format } from "timeago.js";
+import Comments from "../components/Comments";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "timeago.js";
 
-/*const fetchPost = async (slug) => {
+const fetchPost = async (slug) => {
   const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
   return res.data;
-};*/
+};
 
 const SinglePostPage = () => {
-//   const { slug } = useParams();
+  const { slug } = useParams();
 
-//   const { isPending, error, data } = useQuery({
-//     queryKey: ["post", slug],
-//     queryFn: () => fetchPost(slug),
-//   });
+  const { isPending, error, data } = useQuery({
+    queryKey: ["post", slug],
+    queryFn: () => fetchPost(slug),
+  });
 
-//   if (isPending) return "loading...";
-//   if (error) return "Something went wrong!" + error.message;
-//   if (!data) return "Post not found!";
+  if (isPending) return "loading...";
+  if (error) return "Something went wrong!" + error.message;
+  if (!data) return "Post not found!";
 
   return (
     <div className="flex flex-col gap-8">

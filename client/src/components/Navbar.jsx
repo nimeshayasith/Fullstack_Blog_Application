@@ -6,6 +6,10 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
+  const {getToken} = useClerk();
+
+  useEffect(() => {}, [getToken]);
+
   return (
     <div className="w-full h-16 md:h-20 flex items-center justify-between">
       {/* LOGO */}

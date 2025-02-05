@@ -10,6 +10,8 @@ export const clerkWebHook = async (req, res) => {
     throw new Error("Webhook secret needed!");
   }
 
+  // using svix to verify the webhook
+  // https://docs.svix.com/docs/verify-webhooks
   const payload = req.body;
   const headers = req.headers;
 
@@ -25,6 +27,9 @@ export const clerkWebHook = async (req, res) => {
 
   // console.log(evt.data);
 
+  // handle the event
+  // https://docs.clerk.dev/docs/webhooks-reference
+  
   if (evt.type === "user.created") {
     const newUser = new User({
       clerkUserId: evt.data.id,

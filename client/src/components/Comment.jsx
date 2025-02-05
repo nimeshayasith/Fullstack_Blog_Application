@@ -1,56 +1,68 @@
-import React from 'react';
-import '<react-quill-new></react-quill-new>/dist/quill.snow.css';
-import ReactQuill from 'react-quill-new';
-const Comment = () => {
-    return (
-        <div>
-            <input
-              className="text-4xl font-semibold bg-transparent outline-none"
-              type="text"
-              placeholder="My Awesome Story"
-              name="title"
-            />
-            <div className="flex items-center gap-4">
-              <label htmlFor="" className="text-sm">
-                Choose a category:
-              </label>
-              <select
-                name="category"
-                id=""
-                className="p-2 rounded-xl bg-white shadow-md"
-              >
-                <option value="general">General</option>
-                <option value="web-design">Web Design</option>
-                <option value="development">Development</option>
-                <option value="databases">Databases</option>
-                <option value="seo">Search Engines</option>
-                <option value="marketing">Marketing</option>
-              </select>
-            </div>
-            <textarea
-              className="p-4 rounded-xl bg-white shadow-md"
-              name="desc"
-              placeholder="A Short Description"
-            />
-            <div className="flex flex-1 ">
-              <div className="flex flex-col gap-2 mr-2">
-                {/* <Upload type="image" setProgress={setProgress} setData={setImg}>
-                  🌆
-                </Upload>
-                <Upload type="video" setProgress={setProgress} setData={setVideo}>
-                  ▶️
-                </Upload> */}
-              </div>
-              <ReactQuill
-                theme="snow"
-                className="flex-1 rounded-xl bg-white shadow-md"
-                value={value}
-                onChange={setValue}
-                readOnly={0 < progress && progress < 100}
-              />
-            </div>
-        </div>
-    );
+import { format } from "timeago.js";
+import Image from "./Image";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import axios from "axios";
+
+const Comment = ({ comment, postId }) => {
+  const { user } = useUser();
+  const { getToken } = useAuth();
+  const role = user?.publicMetadata?.role;
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      return axios.delete(
+        `${import.meta.env.VITE_API_URL}/comments/${comment._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      toast.success("Comment deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.response.data);
+    },
+  });
+
+  return (
+    <div className="p-4 bg-slate-50 rounded-xl mb-8">
+      <div className="flex items-center gap-4">
+        {comment.user.img && (
+          <Image
+            src={comment.user.img}
+            className="w-10 h-10 rounded-full object-cover"
+            w="40"
+          />
+        )}
+        <span className="font-medium">{comment.user.username}</span>
+        <span className="text-sm text-gray-500">
+          {format(comment.createdAt)}
+        </span>
+        {user &&
+          (comment.user.username === user.username || role === "admin") && (
+            <span
+              className="text-xs text-red-300 hover:text-red-500 cursor-pointer"
+              onClick={() => mutation.mutate()}
+            >
+              delete
+              {mutation.isPending && <span>(in progress)</span>}
+            </span>
+          )}
+      </div>
+      <div className="mt-4">
+        <p>{comment.desc}</p>
+      </div>
+    </div>
+  );
 };
 
 export default Comment;

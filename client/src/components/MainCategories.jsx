@@ -46,7 +46,7 @@ const MainCategories = () => {
       <span className="text-xl font-medium">|</span>
       {/* search */}
       <Search/>
-    </div> 
+    </div>
   );
 };
 
