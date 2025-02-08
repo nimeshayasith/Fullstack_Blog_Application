@@ -10,8 +10,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use(cors(process.env.CLIENT_URL));
@@ -29,26 +27,26 @@ app.use(function (req, res, next) {
     next();
 });
 
-// app.get("/test",(req,res)=>{
-//   res.status(200).send("it works!")
-// })
+app.get("/test",(req,res)=>{
+  res.status(200).send("it works!")
+})
 
-// app.get("/auth-state", (req, res) => {
-//   const authState = req.auth;
-//   res.json(authState);
-// });
+app.get("/auth-state", (req, res) => {
+  const authState = req.auth;
+  res.json(authState);
+});
 
-// app.get("/protect", (req, res) => {
-//   const {userId} = req.auth;
-//   if(!userId){
-//     return res.status(401).json("not authenticated")
-//   }
-//   res.status(200).json("content")
-// });
+app.get("/protect", (req, res) => {
+  const {userId} = req.auth;
+  if(!userId){
+    return res.status(401).json("not authenticated")
+  }
+  res.status(200).json("content")
+});
 
-// app.get("/protect2", requireAuth(), (req, res) => {
-//   res.status(200).json("content")
-// });
+app.get("/protect2", requireAuth(), (req, res) => {
+  res.status(200).json("content")
+});
 
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
@@ -65,4 +63,7 @@ app.use((error, req, res, next) => {
   });
 
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`Server started on port ${PORT}`);
+});

@@ -86,17 +86,20 @@ export const getPost = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
+  console.log("Hi baba");
   const clerkUserId = req.auth.userId;
-
-  console.log(req.headers);
+  console.log("Hi hbkjbj");
+  // console.log(req.headers);
 
   if (!clerkUserId) {
     return res.status(401).json("Not authenticated!");
   }
 
   const user = await User.findOne({ clerkUserId });
+  console.log("Hi M");
 
   if (!user) {
+    console.log("Error user not found");
     return res.status(404).json("User not found!");
   }
 
