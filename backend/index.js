@@ -4,14 +4,13 @@ import userRouter from './routes/user.route.js';
 import postRouter from './routes/post.route.js';
 import commentRouter from './routes/comment.route.js';
 import webhookRouter from './routes/webhook.route.js';
-import bodyParser from 'body-parser';
-import {clerkMiddleware} from './middleware/clerk.middleware.js';
+import cors from 'cors';
+import {clerkMiddleware, requireAuth} from "@clerk/express";
 import dotenv from 'dotenv';
 
 dotenv.config();
-app.use(express.json());
 
-connectDB();
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;

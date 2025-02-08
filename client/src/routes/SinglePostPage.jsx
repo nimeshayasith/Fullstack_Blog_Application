@@ -1,13 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import Image from "../components/Image";
-import PostMenuActions from "../components/PostMenuActions";
+import PostMenuActions from "../components/PostMenuAction";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "timeago.js";
 
-const fetchPost = async (slug) => {
+ const fetchPost = async (slug) => {
   const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
   return res.data;
 };
@@ -37,7 +37,7 @@ const SinglePostPage = () => {
             <Link className="text-blue-800">{data.user.username}</Link>
             <span>on</span>
             <Link className="text-blue-800">{data.category}</Link>
-            {/* <span>{format(data.createdAt)}</span> */}
+            <span>{format(data.createdAt)}</span>
           </div>
           <p className="text-gray-500 font-medium">{data.desc}</p>
         </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
-//import PostList from "../components/PostList";
-//import SideMenu from "../components/SideMenu";
+import PostList from "../components/PostList";
+import SideMenu from "../components/SideMenu";
 
 const PostListPage = () => {
   const [open, setOpen] = useState(false);
@@ -17,10 +17,10 @@ const PostListPage = () => {
       </button>
       <div className="flex flex-col-reverse gap-8 md:flex-row justify-between">
         <div className="">
-          {/* <PostList /> */}
+          <PostList />
         </div>
         <div className={`${open ? "block" : "hidden"} md:block`}>
-          {/* <SideMenu /> */}
+          <SideMenu />
         </div>
       </div>
     </div>
