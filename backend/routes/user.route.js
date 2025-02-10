@@ -1,9 +1,11 @@
-import express from "express"
-import { getUserSavedPosts, savePost } from "../controllers/user.controller.js"
+import express from "express";
+import { requireAuth } from "@clerk/express"; 
+import { getUserSavedPosts, savePost } from "../controllers/user.controller.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get("/saved", getUserSavedPosts)
-router.patch("/save", savePost)
+// 🔹 Protect routes with Clerk authentication
+router.get("/saved", requireAuth(), getUserSavedPosts);
+router.patch("/save", requireAuth(), savePost);
 
-export default router 
+export default router;
