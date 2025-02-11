@@ -103,6 +103,8 @@ export const createPost = async (req, res) => {
     return res.status(404).json("User not found!");
   }
 
+  console.log("Hi work");
+
   let slug = req.body.title.replace(/ /g, "-").toLowerCase();
 
   let existingPost = await Post.findOne({ slug });

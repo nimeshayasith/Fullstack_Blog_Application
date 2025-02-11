@@ -1,3 +1,4 @@
+import { fetchClerkUsers } from "../clerkService.js";
 import User from "../models/user.model.js";
 
 export const getUserSavedPosts = async (req, res) => {
@@ -50,5 +51,32 @@ export const savePost = async (req, res) => {
   } catch (error) {
     console.error("Error saving post:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+export const syncClerkUsers = async (req, res) => {
+  try {
+    const clerkUsers = await fetchClerkUsers();
+    console.log(clerkUsers);
+
+    for (const clerkUser of clerkUsers) {
+      const existingUser = await User.findOne({ clerkUserId: clerkUser.id });
+
+      if (!existingUser) {
+        const newUser = new User({
+          clerkUserId: clerkUser.id,
+          username: clerkUser.username || clerkUser.first_name,
+          email: clerkUser.email_addresses[0]?.email_address,
+          img: clerkUser.image_url,
+        });
+
+        await newUser.save();
+      }
+    }
+
+    res.status(200).json({ message: "Users synced successfully!" });
+  } catch (error) {
+    res.status(500).json({ error: "Error syncing users" });
   }
 };
