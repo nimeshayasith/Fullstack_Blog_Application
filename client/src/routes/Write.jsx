@@ -34,7 +34,7 @@ const Write = () => {
   const mutation = useMutation({
     mutationFn: async (newPost) => {
       const token = await getToken();
-      return axios.post(`http://localhost:5000/posts/`, newPost, {
+      return axios.post(`http://localhost:5000/posts`, newPost, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -126,7 +126,7 @@ const Write = () => {
           />
         </div>
         <button
-         disabled={mutation.isPending || (0 < progress && progress < 100)}
+          disabled={mutation.isPending || (0 < progress && progress < 100)}
           className="bg-blue-800 text-white font-medium rounded-xl mt-4 p-2 w-36 disabled:bg-blue-400 disabled:cursor-not-allowed"
         >
           {mutation.isPending ? "Loading..." : "Send"}

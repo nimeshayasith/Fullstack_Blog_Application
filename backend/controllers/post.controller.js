@@ -1,9 +1,6 @@
 import ImageKit from "imagekit";
 import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export const getPosts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -86,24 +83,19 @@ export const getPost = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  console.log("Hi baba");
   const clerkUserId = req.auth.userId;
-  console.log("Hi hbkjbj");
-  // console.log(req.headers);
+
+  console.log(req.headers);
 
   if (!clerkUserId) {
     return res.status(401).json("Not authenticated!");
   }
 
   const user = await User.findOne({ clerkUserId });
-  console.log("Hi M");
 
   if (!user) {
-    console.log("Error user not found");
     return res.status(404).json("User not found!");
   }
-
-  console.log("Hi work");
 
   let slug = req.body.title.replace(/ /g, "-").toLowerCase();
 
@@ -184,14 +176,10 @@ export const featurePost = async (req, res) => {
   res.status(200).json(updatedPost);
 };
 
-
 const imagekit = new ImageKit({
   urlEndpoint: process.env.IK_URL_ENDPOINT,
   publicKey: process.env.IK_PUBLIC_KEY,
   privateKey: process.env.IK_PRIVATE_KEY,
-
-
-
 });
 
 export const uploadAuth = async (req, res) => {
