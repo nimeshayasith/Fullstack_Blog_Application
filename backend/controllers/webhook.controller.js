@@ -25,7 +25,7 @@ export const clerkWebHook = async (req, res) => {
     });
   }
 
-  // console.log(evt.data);
+  console.log(evt.data);
 
   // handle the event
   // https://docs.clerk.dev/docs/webhooks-reference
