@@ -7,7 +7,7 @@ import webhookRouter from './routes/webhook.route.js';
 import cors from 'cors';
 import {clerkMiddleware, requireAuth} from "@clerk/express";
 import dotenv from 'dotenv';
-import { fetchClerkUsers } from './userClear.js';
+
 
 dotenv.config();
 
@@ -63,9 +63,6 @@ app.use((error, req, res, next) => {
     });
   });
 
-
-// fetch user
-fetchClerkUsers();
 
 app.listen(PORT, () => {
   connectDB();
