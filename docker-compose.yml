@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  backend:
+    image: blog_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: blog_backendcontainer
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb+srv://nimeshayasith08:7ifop6Z5mAz6YSIP@cluster0.j0pvv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    depends_on:
+      - mongo
+
+  frontend:
+    image: blog_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: blog_frontendcontainer
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
