@@ -9,7 +9,7 @@ resource "aws_instance" "blognewapp" {
   key_name = "blogapplication"
   associate_public_ip_address = true
 
-  vpc_security_group_ids = [aws_security_group.real_chat_sg.id]
+  vpc_security_group_ids = [aws_security_group.blog_sg.id]
   tags = {
     Name = "blogappnew"
   }
