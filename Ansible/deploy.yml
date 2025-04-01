@@ -1,23 +1,83 @@
-- name: Deploy Blog Application
-  hosts: ec2
-  become: yes
+---
+- name: Deploy Backend & Frontend Containers on EC2
+  hosts: webservers
+  become: true  # Run tasks as sudo
+  vars:
+    ansible_python_interpreter: /usr/bin/python3  # Global variable
   tasks:
+    - name: Install required packages
+      yum:
+        name: 
+          - docker
+          - python3-pip
+        state: present
+    
+    - name: Start Docker Service
+      service:
+        name: docker
+        state: started
+        enabled: true
+    
+    - name: Add ec2-user to Docker Group (to run Docker without sudo)
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+    
     - name: Pull Backend Docker Image
-      shell: docker pull nimeshayasith/backend:latest
-
+      command: docker pull nimeshayasith/backend
+      changed_when: true
+    
     - name: Pull Frontend Docker Image
-      shell: docker pull nimeshayasith/frontend:latest
-
-    - name: Stop running backend container
-      shell: docker stop backend || true && docker rm backend || true
-      ignore_errors: yes
-
-    - name: Stop running frontend container
-      shell: docker stop frontend || true && docker rm frontend || true
-      ignore_errors: yes
-
+      command: docker pull nimeshayasith/frontend
+      changed_when: true
+    
+    - name: Create Docker network for containers
+      command: docker network create app_network
+      register: network_result
+      changed_when: network_result.rc == 0
+      failed_when: network_result.rc != 0 and "already exists" not in network_result.stderr
+    
+    # Check if backend container exists - fix the escaping issue
+    - name: Check if backend container exists
+      command: docker ps -a --filter "name=backend" --format {% raw %}"{{.Names}}"{% endraw %}
+      register: backend_check
+      changed_when: false
+    
+    # Remove the backend container if it exists
+    - name: Remove existing backend container if present
+      command: docker rm -f backend
+      when: backend_check.stdout == "backend"
+      changed_when: true
+    
     - name: Run Backend Container
-      shell: docker run -d -p 5000:5000 --name backend nimeshayasith/backend:latest
-
+      command: >
+        docker run -d
+        --name backend
+        --restart always
+        -p 5000:5000
+        --network app_network
+        nimeshayasith/backend
+      changed_when: true
+    
+    # Check if frontend container exists - fix the escaping issue
+    - name: Check if frontend container exists
+      command: docker ps -a --filter "name=frontend" --format {% raw %}"{{.Names}}"{% endraw %}
+      register: frontend_check
+      changed_when: false
+    
+    # Remove the frontend container if it exists
+    - name: Remove existing frontend container if present
+      command: docker rm -f frontend
+      when: frontend_check.stdout == "frontend"
+      changed_when: true
+    
     - name: Run Frontend Container
-      shell: docker run -d -p 5173:5173 --name frontend nimeshayasith/frontend:latest
+      command: >
+        docker run -d
+        --name frontend
+        --restart always
+        -p 80:80
+        --network app_network
+        nimeshayasith/frontend
+      changed_when: true
