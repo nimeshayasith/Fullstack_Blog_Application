@@ -1,16 +1,19 @@
 # Use an official Node.js runtime as a parent image
-FROM node:20-alpine
+FROM node:latest
 
 # Set the working directory in the container
 WORKDIR /frontend
 
 RUN npm config set registry http://registry.npmjs.org/
 
+# Clear NPM cache to avoid install issues
+RUN npm cache clean --force
+
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+# Install project dependencies with legacy peer deps
+RUN npm install --legacy-peer-deps --prefer-offline --no-audit
 
 # Copy the rest of the application code
 COPY . .
