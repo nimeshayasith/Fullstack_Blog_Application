@@ -1,15 +1,16 @@
-FROM node:20-alpine AS build
+# Use an official Node.js runtime as a parent image
+FROM node:20-alpine
 
-# Set working directory
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /frontend
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Copy the rest of the application
+# Copy the rest of the application code
 COPY . .
 
 # Pass environment variables for Vite (important for API keys & endpoints)
@@ -23,28 +24,14 @@ ENV VITE_IK_PUBLIC_KEY=$VITE_IK_PUBLIC_KEY
 ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
 ENV VITE_API_URL=$VITE_API_URL
 
-# Pass environment variables for Vite (important for API keys & endpoints)
-ARG VITE_IK_URL_ENDPOINT
-ARG VITE_IK_PUBLIC_KEY
-ARG VITE_CLERK_PUBLISHABLE_KEY
-ARG VITE_API_URL
-
-ENV VITE_IK_URL_ENDPOINT=$VITE_IK_URL_ENDPOINT
-ENV VITE_IK_PUBLIC_KEY=$VITE_IK_PUBLIC_KEY
-ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
-ENV VITE_API_URL=$VITE_API_URL
-
-# Build the Vite app
+# Build the React Vite app
 RUN npm run build
 
-# Use Nginx for serving the built files
-FROM nginx:alpine
+# Install a lightweight web server to serve the build files
+RUN npm install -g serve
 
-# Copy the built files from the previous stage
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
+# Expose the port your app runs on
+EXPOSE 3000
 
 # Command to serve the React app
 CMD ["serve", "-s", "dist"]
