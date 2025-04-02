@@ -13,6 +13,17 @@ RUN npm install --legacy-peer-deps
 # Copy the rest of the application code
 COPY . .
 
+# Pass environment variables for Vite (important for API keys & endpoints)
+ARG VITE_IK_URL_ENDPOINT
+ARG VITE_IK_PUBLIC_KEY
+ARG VITE_CLERK_PUBLISHABLE_KEY
+ARG VITE_API_URL
+
+ENV VITE_IK_URL_ENDPOINT=$VITE_IK_URL_ENDPOINT
+ENV VITE_IK_PUBLIC_KEY=$VITE_IK_PUBLIC_KEY
+ENV VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY
+ENV VITE_API_URL=$VITE_API_URL
+
 # Build the React Vite app
 RUN npm run build
 
