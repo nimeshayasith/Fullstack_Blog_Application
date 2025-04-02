@@ -3,7 +3,7 @@ provider "aws"{
 region = "us-east-1"
 }
 # Resource block
-resource "aws_instance" "blognewapp" {
+resource "aws_instance" "blogmyapp" {
   ami = "ami-071226ecf16aa7d96"
   instance_type = "t2.micro"
   key_name = "blogapplication"
@@ -11,7 +11,7 @@ resource "aws_instance" "blognewapp" {
 
   vpc_security_group_ids = [aws_security_group.blog_sg.id]
   tags = {
-    Name = "blogappnew"
+    Name = "blogmynew"
   }
   user_data = <<-EOF
               #!/bin/bash
@@ -70,6 +70,6 @@ resource "aws_security_group" "blog_sg" {
 }
 
 output "instance_public_ip" {
-  value = aws_instance.blognewapp.public_ip
+  value = aws_instance.blogmyapp.public_ip
   description = "Public IP of the EC2 instance"
 }
