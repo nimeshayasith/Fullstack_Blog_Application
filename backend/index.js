@@ -64,7 +64,7 @@ app.use((error, req, res, next) => {
   });
 
 
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0', () => {
   connectDB();
   console.log(`Server started on port ${PORT}`);
 });
